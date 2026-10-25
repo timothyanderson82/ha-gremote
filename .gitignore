@@ -1,0 +1,14 @@
+# Captured G-Web URLs hold the account token
+*.url
+.env
+.env.*
+secrets.yaml
+
+# Python / tooling
+.venv/
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.ruff_cache/
+.coverage
+htmlcov/
