@@ -1,0 +1,54 @@
+{
+  "config": {
+    "step": {
+      "user": {
+        "title": "Add a G-Web gate module",
+        "description": "Paste a G-Web URL for your module, such as the MCRStatus or MCRActEn URL the G-Remote or MyCentsys Remote app calls. Its data parameter identifies the module and your account; it is stored in Home Assistant and not shown again.",
+        "data": {
+          "url": "G-Web URL"
+        }
+      },
+      "reauth_confirm": {
+        "title": "Update the G-Web URL",
+        "description": "G-Web no longer accepts the stored details. Paste a current G-Web URL for the same module.",
+        "data": {
+          "url": "G-Web URL"
+        }
+      }
+    },
+    "error": {
+      "invalid_url": "That is not a G-Web URL with a data parameter holding a device ID and token.",
+      "invalid_auth": "G-Web did not recognise that module and token.",
+      "cannot_connect": "Could not reach G-Web."
+    },
+    "abort": {
+      "already_configured": "This module is already set up.",
+      "reauth_successful": "The G-Web details were updated.",
+      "wrong_device": "That URL is for a different module."
+    }
+  },
+  "entity": {
+    "binary_sensor": {
+      "output": {
+        "name": "{name} output"
+      }
+    },
+    "sensor": {
+      "signal": {
+        "name": "Signal"
+      },
+      "calls_remaining": {
+        "name": "Call tokens remaining"
+      },
+      "sms_remaining": {
+        "name": "SMS tokens remaining"
+      },
+      "connection_type": {
+        "name": "Connection type"
+      },
+      "last_synced": {
+        "name": "Last synced"
+      }
+    }
+  }
+}

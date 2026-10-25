@@ -1,0 +1,14 @@
+{
+  "domain": "gremote",
+  "name": "G-Remote",
+  "codeowners": [
+    "@timothyanderson82"
+  ],
+  "config_flow": true,
+  "documentation": "https://github.com/timothyanderson82/ha-gremote",
+  "integration_type": "device",
+  "iot_class": "cloud_polling",
+  "issue_tracker": "https://github.com/timothyanderson82/ha-gremote/issues",
+  "requirements": [],
+  "version": "0.1.0"
+}
