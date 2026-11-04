@@ -4,7 +4,8 @@ Control a Centurion gate motor fitted with a **G-ULTRA** or **G-SPEAK** GSM modu
 from Home Assistant, through the same G-Web cloud API (`www.gweb.co.za`) that the
 G-Remote and MyCentsys Remote apps use.
 
-Unofficial; not affiliated with Centurion Systems.
+Unofficial; not affiliated with Centurion Systems. The CENTURION name and logo are
+trademarks of Centurion Systems, used here only to identify the hardware.
 
 ## What you get
 
