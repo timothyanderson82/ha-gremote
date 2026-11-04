@@ -32,7 +32,9 @@ STATUS_BODY = {
 }
 CLOSED = [89, 91, 93, 51, 48, 48]
 OPEN = [89, 91, 93, 49, 48, 48]
-OPENING = [88, 91, 93, 48, 48, 48]
+# Recorded on a G-ULTRA: 52 while the gate moves either way
+RUNNING = [89, 91, 93, 52, 48, 48]
+PULSING = [88, 91, 93, 51, 48, 48]
 KEEP_OPEN = [89, 91, 92, 49, 48, 48]
 
 

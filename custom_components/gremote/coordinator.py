@@ -39,10 +39,7 @@ class GRemoteData:
     status: Status
     states: list[int]  # empty while the module is offline
     online: bool
-
-    @property
-    def gate_state(self) -> str | None:
-        return gate_state(self.states, self.status.feedback_io)
+    gate_state: str | None = None
 
 
 class GRemoteCoordinator(DataUpdateCoordinator[GRemoteData]):
@@ -64,6 +61,7 @@ class GRemoteCoordinator(DataUpdateCoordinator[GRemoteData]):
         self._status: Status | None = None
         self._status_at = dt_util.utcnow()
         self._fast_until = dt_util.utcnow()
+        self._last_stopped: str | None = None  # "open" or "closed"
 
     async def _fetch_status(self) -> Status:
         try:
@@ -96,7 +94,24 @@ class GRemoteCoordinator(DataUpdateCoordinator[GRemoteData]):
 
         if now >= self._fast_until:
             self.update_interval = POLL_INTERVAL
-        return GRemoteData(status=status, states=states, online=online)
+        return GRemoteData(
+            status=status,
+            states=states,
+            online=online,
+            gate_state=self._direction(gate_state(states, status.feedback_io)),
+        )
+
+    def _direction(self, state: str | None) -> str | None:
+        """Tell opening from closing.
+
+        The module reports one "running" code whichever way the gate moves, so
+        the direction comes from where the gate last stood still.
+        """
+        if state in ("open", "closed"):
+            self._last_stopped = state
+        elif state == "running":
+            return {"closed": "opening", "open": "closing"}.get(self._last_stopped, state)
+        return state
 
     async def async_trigger(self, io_number: int) -> None:
         """Pulse an output, then watch closely while the gate moves."""

@@ -27,7 +27,7 @@ from custom_components.gremote.api import (
     InvalidCredentialsError,
 )
 
-from .conftest import KEEP_OPEN, OPEN, OPENING
+from .conftest import CLOSED, KEEP_OPEN, OPEN, RUNNING
 
 GATE = "cover.gate"
 
@@ -84,12 +84,34 @@ async def test_cover_only_pulses_when_needed(
 async def test_cover_refuses_while_moving(
     hass: HomeAssistant, setup_integration: MockConfigEntry, client: AsyncMock
 ) -> None:
-    await _states(hass, client, OPENING)
+    await _states(hass, client, RUNNING)
     assert hass.states.get(GATE).state == CoverState.OPENING
     with pytest.raises(HomeAssistantError, match="moving"):
         await _cover(hass, SERVICE_CLOSE_COVER)
     await _cover(hass, SERVICE_OPEN_COVER)  # already on its way
     client.trigger.assert_not_awaited()
+
+
+async def test_direction_from_last_resting_state(
+    hass: HomeAssistant, setup_integration: MockConfigEntry, client: AsyncMock
+) -> None:
+    """The sequence recorded on the real gate: one running code both ways."""
+    seen = []
+    for states in (CLOSED, RUNNING, OPEN, RUNNING, CLOSED):
+        await _states(hass, client, states)
+        seen.append(hass.states.get(GATE).state)
+    assert seen == ["closed", "opening", "open", "closing", "closed"]
+
+
+async def test_running_after_startup_is_unknown(
+    hass: HomeAssistant, config_entry: MockConfigEntry, client: AsyncMock
+) -> None:
+    """Moving when HA starts: the direction cannot be known yet."""
+    client.io_states.return_value = list(RUNNING)
+    config_entry.add_to_hass(hass)
+    await hass.config_entries.async_setup(config_entry.entry_id)
+    await hass.async_block_till_done()
+    assert hass.states.get(GATE).state == "unknown"
 
 
 async def test_trigger_polls_fast_then_settles(

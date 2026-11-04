@@ -31,9 +31,10 @@ EP_IO_STATES = "/api/AppIOStatesEN"  # live IO states, addressed by device ID on
 EP_STATUS = "/api/MCRStatus"  # last-known diagnostics and IO names
 EP_TRIGGER = "/api/MCRActEn"  # pulse an output
 
-# State codes reported by a status-feedback input. Unused IOs also report 48,
-# so it only means "opening" on the IO that carries the gate status.
-GATE_STATES = {48: "opening", 49: "open", 50: "closing", 51: "closed", 52: "running"}
+# State codes reported by a status-feedback input. A G-ULTRA reports 52 while
+# the gate moves in either direction (seen on hardware); 50 is reported by
+# some modules for closing.
+GATE_STATES = {49: "open", 50: "closing", 51: "closed", 52: "running"}
 # Outputs report 88-99: even is on, odd is off.
 OUTPUT_STATES = range(88, 100)
 

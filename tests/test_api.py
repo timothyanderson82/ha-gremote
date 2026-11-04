@@ -11,7 +11,7 @@ from yarl import URL
 
 from custom_components.gremote import api
 
-from .conftest import CLOSED, DEVICE_ID, OPENING, STATUS_BODY, TOKEN, URL as STATUS_URL
+from .conftest import CLOSED, DEVICE_ID, PULSING, RUNNING, STATUS_BODY, TOKEN, URL as STATUS_URL
 
 
 def test_parse_url_round_trip() -> None:
@@ -71,11 +71,11 @@ def test_parse_status_offline_and_garbage() -> None:
 def test_states() -> None:
     feedback = api.parse_status(STATUS_BODY).feedback_io
     assert api.gate_state(CLOSED, feedback) == "closed"
-    assert api.gate_state(OPENING, feedback) == "opening"
+    assert api.gate_state(RUNNING, feedback) == "running"
     assert api.gate_state(CLOSED, None) is None
     open_io, pedestrian = api.parse_status(STATUS_BODY).ios[:2]
-    assert api.output_is_on(OPENING, open_io) is True
-    assert api.output_is_on(OPENING, pedestrian) is False
+    assert api.output_is_on(PULSING, open_io) is True
+    assert api.output_is_on(PULSING, pedestrian) is False
     assert api.output_is_on([48], open_io) is None
 
 
